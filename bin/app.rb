@@ -11,11 +11,8 @@ set :views, "views"
 
 get '/devart' do
   badwords = get_bad_words
-  p badwords
   theSearch = get_searchterm
-  p theSearch
   theOptions = get_search_options
-  p theOptions
   url = "http://backend.deviantart.com/rss.xml?type=deviation&q=#{theSearch}\+#{theOptions}"
   items = retrieve_items(url)
   erb :devart, :locals => {'feed' => items, 'searchterm' => theSearch, 'badwords' => badwords}
@@ -26,13 +23,11 @@ def get_bad_words
 end
 
 def get_searchterm
-  p "getting search term"
-  p params[:search]
-  return params[:search].nil? ? open('http://randomword.setgetgo.com/get.php').read : params[:search].split('+').first
+  return params[:search].empty? ? open('http://randomword.setgetgo.com/get.php').read : params[:search].split('+').first
 end
 
 def get_search_options
-  if not params[:search].nil? then
+  if not params[:search].empty? then
     @x = params[:search].split('+')
     @x.shift
     return @x.join('+')
