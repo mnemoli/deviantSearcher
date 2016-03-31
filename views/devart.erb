@@ -1,0 +1,25 @@
+<h1>You searched for: <%=searchterm%></h1>
+<ul>
+  <li><a onclick="fireAjax('<%=searchterm%>%2Bboost:popular')" href="#">Popular</a></li>
+  <li><a onclick="fireAjax('<%=searchterm%>%2Bsort:time')" href="#">Newest</a></li>
+  <li><a onclick="fireAjax('<%=searchterm%>%2Bboost:popular%2Bmax_age:24h')" href="#">Popular today</a></li>
+</ul>
+<% if feed.any? {|v| badwords.any? {|w| v.values.join(" ").downcase.include?(w)}} %>
+<h1>YOU LOSE</h1>
+Bad stuff is highlighted in red.<br/>
+<% end %>
+<table>
+  <% feed.each do |elem| %>
+  <tr <% if badwords.any? {|w| elem.values.join(" ").downcase.include?(w)} %> style="background-color:red" <%end%>>
+    <td>
+      <% if not elem['thumb'].empty? then %> <a href="<%=elem['url']%>" target="_blank"><img src="<%=elem['thumb']%>" alt=""></a>  <% else %> <%= elem['text'] %> <% end %>
+    </td>
+    <td>
+    <h1><%= elem["title"] %></h1>
+      <%= elem["desc"] %>
+      <br/>
+      <%= elem["user"] %>
+    </td>
+  </tr>
+  <% end %>
+</table>
