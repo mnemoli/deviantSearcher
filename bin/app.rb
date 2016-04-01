@@ -4,7 +4,6 @@ require 'rss'
 require 'open-uri'
 require 'nokogiri'
 
-set :port, 80
 set :static, true
 set :public_folder, "static"
 set :views, "views"
