@@ -1,28 +1,10 @@
-<html>
-  <head>
-    <title>Deviant Searcher</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <script>
-$(document).ready(function(){
-    $("#button").click(function(){
-        var searchTerm = $("#searchTerm").val();
-        fireAjax(searchTerm);
-    });
-});
-
-function fireAjax(searchTerm) {
-  $.ajax({url: encodeURI("/devsearch?search=" + searchTerm), success: function(result){
-    $("#div1").html(result);
-  }});
-}
-
-</script>
-  </head>
-  <body>
-    <h1>Enter your search</h1>
-    <h3>or leave empty for a random word</h3>
-    <input id="searchTerm"></input>
-    <input id="button" type="submit" value="Do it"></button>
-    <div id="div1"></div>
-  </body>
-</html>
+<div class="container">
+  <div class="form-header">
+    <h1>Deviant Searcher</h1>
+    <form method="GET" action="/devart" class="form-inline justify-content-center">
+      <input name="search" type="text" class="form-control w-75 mr-sm-2" placeholder="Leave blank for a random word!" value="<%=searchterm%>"></input>
+      <input type="submit" value="Search" class="btn btn-primary"></button>
+      </div>
+    </form>
+  </div>
+</div>

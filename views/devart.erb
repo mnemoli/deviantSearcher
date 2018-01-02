@@ -1,25 +1,47 @@
-<h1>You searched for: <%=searchterm%></h1>
-<ul>
-  <li><a onclick="fireAjax('<%=searchterm%>%2Bboost:popular')" href="#">Popular</a></li>
-  <li><a onclick="fireAjax('<%=searchterm%>%2Bsort:time')" href="#">Newest</a></li>
-  <li><a onclick="fireAjax('<%=searchterm%>%2Bboost:popular%2Bmax_age:24h')" href="#">Popular today</a></li>
-</ul>
-<% if feed.any? {|v| badwords.any? {|w| v.values.join(" ").downcase.include?(w)}} %>
-<h1>YOU LOSE</h1>
-Bad stuff is highlighted in red.<br/>
-<% end %>
-<table>
-  <% feed.each do |elem| %>
-  <tr <% if badwords.any? {|w| elem.values.join(" ").downcase.include?(w)} %> style="background-color:red" <%end%>>
-    <td>
-      <% if not elem['thumb'].empty? then %> <a href="<%=elem['url']%>" target="_blank"><img src="<%=elem['thumb']%>" alt=""></a>  <% else %> <%= elem['text'] %> <% end %>
-    </td>
-    <td>
-    <h1><%= elem["title"] %></h1>
-      <%= elem["desc"] %>
-      <br/>
-      <%= elem["user"] %>
-    </td>
-  </tr>
-  <% end %>
-</table>
+<html>
+  <head lang="en">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Deviant Searcher</title>
+    <link rel="stylesheet" href="home.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+  </head>
+  <body>
+     <% if feed.any? {|v| badwords.any? {|w| v.values.join(" ").downcase.include?(w)}} %>
+      <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">You lose!</h4>
+        <p>Results with bad words are highlighted in red.</p>
+      </div>
+      <% else %>
+      <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">You win!</h4>
+        <p>The results didn't match any bad words.</p>
+      </div>
+      <% end %>
+    <%= erb :search_form, :locals => {'searchterm' => searchterm} %>
+    <div class="mt-5"> </div>
+    <container>
+      <!--ul>
+        <li><a onclick="fireAjax('<%=searchterm%>%2Bboost:popular')" href="#">Popular</a></li>
+        <li><a onclick="fireAjax('<%=searchterm%>%2Bsort:time')" href="#">Newest</a></li>
+        <li><a onclick="fireAjax('<%=searchterm%>%2Bboost:popular%2Bmax_age:24h')" href="#">Popular today</a></li>
+      </ul-->
+      <div class="card-columns">
+        <% feed.each do |elem| %>
+        <div class="card <% if badwords.any? {|w| elem.values.join(" ").downcase.include?(w)} %>text-white bg-danger<%end%>">
+          <div class="card-img-top h-25" style="background-color: lightgrey !important;">
+             <% if not elem['thumb'].empty? then %><img class="img-thumbnail mx-auto d-block align-middle" src="<%=elem['thumb']%>" alt=""/><% else %> <blockquote style="overflow:hidden;" class="blockquote px-3 h-100"><%= elem['text'] %></blockquote> <% end %>
+          </div>
+          <div class="card-body">
+            <h4 class="card-title"><%= elem["title"] %></h4>
+            <p class="card-text text-truncate" style="max-height:25%"><%= elem["desc"] %></p>
+            <p><a href="<%=elem['url']%>" target="_blank" class="btn btn-primary">View on Deviantart</a></p>
+          </div>
+          <div class="card-footer"><%= elem["user"] %></div>
+        </div>
+        <% end %>
+      </div>
+    </container>
+  </body>
+</html>

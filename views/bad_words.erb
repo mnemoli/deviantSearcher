@@ -1,0 +1,11 @@
+<div class="container">
+  <div class="form-header">
+    <h3>Try to avoid</h3>
+    <p class="small-lead">If your search results include one of these words, you lose</p>
+    <ul class="list-inline">
+      <% get_bad_words.each do |elem| %>
+        <li class="list-inline-item"><%=elem%></li>
+      <% end %>
+    </ul>
+  </div>
+</div>

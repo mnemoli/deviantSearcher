@@ -9,8 +9,9 @@ set :public_folder, "static"
 set :views, "views"
 
 get '/devart' do
-  badwords = get_bad_words
   theSearch = get_searchterm
+  if params[:search].empty? then redirect to("/devart?search=#{theSearch}") end
+  badwords = get_bad_words
   theOptions = get_search_options
   url = "http://backend.deviantart.com/rss.xml?type=deviation&q=#{theSearch}\+#{theOptions}"
   items = retrieve_items(url)
@@ -21,8 +22,14 @@ def get_bad_words
   return IO.readlines("badwords.txt").each {|l| l.chomp!}
 end
 
+def get_random_word
+  random_word_api = "http://api.wordnik.com/v4/words.json/randomWord?api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5"
+  random_word_response = JSON.parse(open(random_word_api).read)
+  return random_word_response["word"]
+end
+
 def get_searchterm
-  return params[:search].empty? ? open('http://randomword.setgetgo.com/get.php').read : params[:search].split('+').first
+  return params[:search].empty? ? get_random_word : params[:search].split('+').first
 end
 
 def get_search_options
@@ -40,7 +47,7 @@ def retrieve_items(url)
   @items = []
   @feed.search('item').map do |doc_item|
     @items << {
-      "url" => doc_item.at('content/@url').respond_to?("text") ? doc_item.at('content/@url').text : "",
+      "url" => doc_item.at('link').text,
     "thumb" => doc_item.at_xpath('thumbnail[3]/@url').respond_to?("text") ? doc_item.at_xpath('thumbnail[3]/@url').text : "",
     "text" => doc_item.xpath('text').respond_to?("text") ? doc_item.xpath('text').text : "",
     "desc" => doc_item.at('description').text,
@@ -53,9 +60,5 @@ def retrieve_items(url)
 end
 
 get '/' do
-    erb :search_form
-end
-
-get '/devsearch' do
-  redirect to("/devart?search=#{params[:search]}")
+    erb :home
 end
