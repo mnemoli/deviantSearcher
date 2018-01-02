@@ -3,6 +3,7 @@ require 'tilt/erb'
 require 'rss'
 require 'open-uri'
 require 'nokogiri'
+require 'json'
 
 set :static, true
 set :public_folder, "static"
